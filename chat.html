@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuestas Fajardo 2026</title>
+    <style>
+        :root {
+            /* Colores Institucionales Fajardo / Dignidad */
+            --primary: #4A148C;      /* Morado oscuro */
+            --accent: #D81B60;       /* Magenta/Fucsia compromiso */
+            --bg-light: #F3E5F5;     /* Fondo lila muy suave */
+            --white: #FFFFFF;
+            --text-dark: #333333;
+            --user-bubble: #E1BEE7;  /* Burbuja usuario */
+            --bot-bubble: #F5F5F5;   /* Burbuja bot */
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-light);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 95vh;
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(74, 20, 140, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Encabezado */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #7B1FA2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+        }
+        .header h1 { margin: 0; font-size: 1.5rem; letter-spacing: 0.5px; }
+        .header p { margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9; }
+
+        /* Área de Chat */
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-image: radial-gradient(#f3e5f5 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            position: relative;
+        }
+
+        .bot-msg {
+            background-color: var(--bot-bubble);
+            color: var(--text-dark);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #eee;
+        }
+
+        .user-msg {
+            background-color: var(--user-bubble);
+            color: var(--primary);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Botones Rápidos */
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            padding: 12px 20px;
+            background: #fff;
+            overflow-x: auto;
+            border-top: 1px solid #f0f0f0;
+            scrollbar-width: none;
+        }
+        .suggestions::-webkit-scrollbar { display: none; }
+
+        .chip {
+            background: white;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .chip:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Área de Input */
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background: white;
+            border-top: 1px solid #ddd;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 1px solid #ccc;
+            border-radius: 30px;
+            outline: none;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .input-area input:focus {
+            border-color: var(--primary);
+        }
+        .input-area button {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        .input-area button:hover {
+            transform: scale(1.1);
+            background-color: #C2185B;
+        }
+
+        .loading {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 20px;
+            font-style: italic;
+            display: none;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="header">
+            <h1>Sergio Fajardo</h1>
+            <p>Asistente Virtual de Propuestas</p>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message bot-msg">
+                👋 Hola. Soy el asistente oficial. Conoce mis propuestas sobre <strong>Salud</strong>, <strong>Seguridad</strong> y <strong>Corrupción</strong>.
+            </div>
+        </div>
+
+        <div class="loading" id="loadingMsg">Consultando propuestas...</div>
+
+        <div class="suggestions">
+            <button class="chip" onclick="quickAsk('¿Qué propones en Salud?')">🏥 Salud</button>
+            <button class="chip" onclick="quickAsk('¿Cómo combatir la Corrupción?')">⚖️ Corrupción</button>
+            <button class="chip" onclick="quickAsk('¿Cuál es el plan de Seguridad?')">🛡️ Seguridad</button>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Escribe tu pregunta..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // Historial simple para mantener contexto
+        let chatHistory = [];
+
+        function quickAsk(text) {
+            document.getElementById("userInput").value = text;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("userInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            // 1. Mostrar mensaje usuario
+            appendMessage(text, "user");
+            input.value = "";
+            document.getElementById("loadingMsg").style.display = "block";
+
+            try {
+                // 2. Enviar a nuestro backend Python en Render
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message: text,
+                        history: chatHistory 
+                    })
+                });
+
+                const data = await response.json();
+                
+                // 3. Mostrar respuesta
+                if (data.error) {
+                    appendMessage("Hubo un error al consultar. Intenta de nuevo.", "bot");
+                    console.error(data.error);
+                } else {
+                    appendMessage(data.reply, "bot");
+                    
+                    // Guardar en historial (sin enviar archivos de nuevo, solo texto)
+                    chatHistory.push({ role: "user", parts: [{ text: text }] });
+                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+                }
+
+            } catch (error) {
+                appendMessage("Error de conexión con el servidor.", "bot");
+            } finally {
+                document.getElementById("loadingMsg").style.display = "none";
+            }
+        }
+
+        function appendMessage(text, sender) {
+            const box = document.getElementById("chatBox");
+            const div = document.createElement("div");
+            div.className = `message ${sender}-msg`;
+            
+            // Formatear negritas y listas
+            let formatted = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Negrita
+                .replace(/^\*\s/gm, '• ') // Viñetas
+                .replace(/\n/g, '<br>'); // Saltos de línea
+
+            div.innerHTML = formatted;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function handleEnter(e) {
+            if (e.key === "Enter") sendMessage();
+        }
+    </script>
+</body>
+</html>
