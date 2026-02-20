@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propuestas Sergio Fajardo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Colores Institucionales - Mejora para más dopamina: más vibrantes y contrastados */
+            --primary: #6A1B9A;      /* Morado vibrante */
+            --secondary: #AB47BC;    /* Morado claro para gradientes */
+            --accent: #EC407A;       /* Rosa/magenta más brillante para energía */
+            --bg-color: #FAEFFE;     /* Fondo lila muy suave, menos cansino */
+            --chat-bg: #FFFFFF;
+            --text-color: #212121;   /* Texto oscuro para alto contraste */
+            --user-bg: #E1BEE7;      /* Lila claro para usuario */
+            --bot-bg: #F3E5F5;       /* Fondo bot suave */
+            --shadow-color: rgba(106, 27, 154, 0.15); /* Sombra suave */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif; /* Fuente moderna, legible, menos cansina */
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--text-color);
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 500px; /* Un poco más ancho para comodidad */
+            height: 90vh;
+            background: var(--chat-bg);
+            border-radius: 24px; /* Bordes más suaves */
+            box-shadow: 0 12px 30px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: box-shadow 0.3s ease; /* Efecto dopaminico al hover */
+        }
+        .chat-container:hover { box-shadow: 0 15px 40px var(--shadow-color); }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px;
+            text-align: center;
+            border-bottom: 5px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; }
+        .header p { margin: 6px 0 0; font-size: 0.95rem; opacity: 0.95; font-weight: 500; }
+
+        .chat-box {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: linear-gradient(to bottom, #fff, var(--bg-color)); /* Gradiente suave para profundidad */
+            scroll-behavior: smooth; /* Scroll dopaminico suave */
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 22px;
+            font-size: 1rem; /* Texto más grande para menos cansancio */
+            line-height: 1.6; /* Espaciado para legibilidad */
+            animation: fadeInUp 0.4s ease, pulse 0.5s ease; /* Animaciones dopaminicas */
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        .bot-msg {
+            background-color: var(--bot-bg);
+            color: var(--text-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+
+        .user-msg {
+            background-color: var(--user-bg);
+            color: var(--primary);
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+            font-weight: 500;
+        }
+
+        .loading {
+            font-size: 0.85rem;
+            color: #757575;
+            margin-left: 24px;
+            font-style: italic;
+            display: none;
+            margin-bottom: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Botones de sugerencias - Más dopaminicos con escala y color */
+        .suggestions {
+            display: flex;
+            gap: 10px;
+            padding: 12px 18px;
+            background: #fff;
+            overflow-x: auto;
+            border-top: 1px solid #f0f0f0;
+            scrollbar-width: none;
+        }
+        .suggestions::-webkit-scrollbar { display: none; }
+
+        .chip {
+            background: linear-gradient(135deg, #fff, var(--user-bg));
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 16px;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s, background 0.2s;
+            font-weight: 500;
+            box-shadow: 0 2px 4px var(--shadow-color);
+        }
+        .chip:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            transform: scale(1.05); /* Efecto dopaminico */
+        }
+
+        .input-area {
+            display: flex;
+            padding: 18px;
+            background: white;
+            border-top: 1px solid #eee;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 14px 22px;
+            border: 1.5px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+        .input-area input:focus { 
+            border-color: var(--accent); 
+            box-shadow: 0 0 8px rgba(236, 64, 122, 0.3); /* Glow dopaminico */
+        }
+        .input-area input::placeholder { color: #9E9E9E; }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--accent), #D81B60);
+            color: white;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-left: 12px;
+            cursor: pointer;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 3px 6px rgba(236, 64, 122, 0.2);
+        }
+        .send-btn:hover { 
+            transform: scale(1.12) rotate(15deg); /* Rotación divertida para dopamina */
+            box-shadow: 0 4px 8px rgba(236, 64, 122, 0.4);
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="header">
+            <h1>Sergio Fajardo</h1>
+            <p>Salud • Corrupción • Seguridad</p>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+            <div class="message bot-msg">
+                Hola 👋. Soy el asistente virtual de la campaña. Respondo de forma breve sobre nuestras propuestas. ¿Qué quieres saber?
+            </div>
+        </div>
+
+        <div class="loading" id="loadingMsg">Consultando... (Esto puede tardar unos segundos si el servidor estaba dormido)</div>
+
+        <div class="suggestions">
+            <button class="chip" onclick="askQuick('¿Qué propone para la Salud?')">🏥 Salud</button>
+            <button class="chip" onclick="askQuick('¿Cómo combatir la Corrupción?')">⚖️ Corrupción</button>
+            <button class="chip" onclick="askQuick('¿Cuál es el plan de Seguridad?')">🛡️ Seguridad</button>
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Escribe tu pregunta..." onkeypress="handleEnter(event)">
+            <button class="send-btn" onclick="sendMessage()">➤</button>
+        </div>
+    </div>
+
+    <script>
+        // URL DE TU SERVIDOR EN RENDER
+        const BACKEND_URL = "https://ingles-646a.onrender.com/api/chat";
+        
+        let chatHistory = [];
+
+        function askQuick(text) {
+            document.getElementById("userInput").value = text;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById("userInput");
+            const text = input.value.trim();
+            if (!text) return;
+
+            // 1. Mostrar mensaje del usuario
+            addMessage(text, 'user');
+            input.value = "";
+            document.getElementById("loadingMsg").style.display = "block";
+
+            try {
+                // 2. Conectar con tu servidor Render
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        history: chatHistory
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    addMessage("Hubo un error: " + data.error, 'bot');
+                } else {
+                    addMessage(data.reply, 'bot');
+                    // Guardar historial
+                    chatHistory.push({ role: "user", parts: [{ text: text }] });
+                    chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+                }
+
+            } catch (error) {
+                console.error(error);
+                addMessage("Error de conexión. Puede que el servidor se esté despertando, intenta de nuevo en 30 segundos.", 'bot');
+            } finally {
+                document.getElementById("loadingMsg").style.display = "none";
+            }
+        }
+
+        function addMessage(text, sender) {
+            const box = document.getElementById("chatBox");
+            const div = document.createElement("div");
+            div.className = `message ${sender}-msg`;
+            
+            // Formatear texto (negritas y saltos de línea)
+            let formatted = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
+            div.innerHTML = formatted;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function handleEnter(e) {
+            if (e.key === "Enter") sendMessage();
+        }
+    </script>
+</body>
+</html>
