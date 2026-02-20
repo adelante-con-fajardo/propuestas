@@ -3,55 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propuestas Fajardo 2026</title>
+    <title>Propuestas Sergio Fajardo</title>
     <style>
         :root {
-            /* Colores Institucionales Fajardo / Dignidad */
+            /* Colores Institucionales */
             --primary: #4A148C;      /* Morado oscuro */
-            --accent: #D81B60;       /* Magenta/Fucsia compromiso */
-            --bg-light: #F3E5F5;     /* Fondo lila muy suave */
-            --white: #FFFFFF;
-            --text-dark: #333333;
-            --user-bubble: #E1BEE7;  /* Burbuja usuario */
-            --bot-bubble: #F5F5F5;   /* Burbuja bot */
+            --secondary: #7B1FA2;    /* Morado medio */
+            --accent: #D81B60;       /* Magenta/Fucsia */
+            --bg-color: #F3E5F5;     /* Fondo Lila suave */
+            --chat-bg: #ffffff;
+            --text-color: #333;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-light);
-            height: 100vh;
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 100vh;
         }
 
         .chat-container {
             width: 100%;
-            max-width: 500px;
-            height: 95vh;
-            background: var(--white);
+            max-width: 480px;
+            height: 90vh;
+            background: var(--chat-bg);
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(74, 20, 140, 0.2);
+            box-shadow: 0 10px 25px rgba(74, 20, 140, 0.2);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid #e0e0e0;
+            position: relative;
         }
 
-        /* Encabezado */
         .header {
-            background: linear-gradient(135deg, var(--primary) 0%, #7B1FA2 100%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 20px;
             text-align: center;
             border-bottom: 4px solid var(--accent);
         }
-        .header h1 { margin: 0; font-size: 1.5rem; letter-spacing: 0.5px; }
-        .header p { margin: 5px 0 0; font-size: 0.9rem; opacity: 0.9; }
+        .header h1 { margin: 0; font-size: 1.4rem; font-weight: 700; }
+        .header p { margin: 5px 0 0; font-size: 0.85rem; opacity: 0.9; }
 
-        /* Área de Chat */
         .chat-box {
             flex: 1;
             padding: 20px;
@@ -65,34 +62,45 @@
 
         .message {
             max-width: 80%;
-            padding: 12px 18px;
+            padding: 12px 16px;
             border-radius: 18px;
-            line-height: 1.4;
             font-size: 0.95rem;
-            position: relative;
+            line-height: 1.4;
+            animation: fadeIn 0.3s ease;
         }
 
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .bot-msg {
-            background-color: var(--bot-bubble);
-            color: var(--text-dark);
+            background-color: #F5F5F5;
+            color: #333;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             border: 1px solid #eee;
         }
 
         .user-msg {
-            background-color: var(--user-bubble);
+            background-color: #E1BEE7; /* Lila claro */
             color: var(--primary);
             align-self: flex-end;
             border-bottom-right-radius: 4px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        /* Botones Rápidos */
+        .loading {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 20px;
+            font-style: italic;
+            display: none;
+            margin-bottom: 10px;
+        }
+
+        /* Botones de sugerencias */
         .suggestions {
             display: flex;
-            gap: 10px;
-            padding: 12px 20px;
+            gap: 8px;
+            padding: 10px 15px;
             background: #fff;
             overflow-x: auto;
             border-top: 1px solid #f0f0f0;
@@ -104,26 +112,24 @@
             background: white;
             border: 1px solid var(--primary);
             color: var(--primary);
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 0.85rem;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             cursor: pointer;
             white-space: nowrap;
+            transition: 0.2s;
             font-weight: 600;
-            transition: all 0.3s;
         }
         .chip:hover {
             background: var(--primary);
             color: white;
-            transform: translateY(-2px);
         }
 
-        /* Área de Input */
         .input-area {
             display: flex;
             padding: 15px;
             background: white;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #eee;
         }
         .input-area input {
             flex: 1;
@@ -131,41 +137,27 @@
             border: 1px solid #ccc;
             border-radius: 30px;
             outline: none;
-            font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: 0.3s;
         }
-        .input-area input:focus {
-            border-color: var(--primary);
-        }
-        .input-area button {
-            background-color: var(--accent);
+        .input-area input:focus { border-color: var(--primary); }
+
+        .send-btn {
+            background: var(--accent);
             color: white;
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             margin-left: 10px;
             cursor: pointer;
             font-size: 1.2rem;
             display: flex;
-            justify-content: center;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            justify-content: center;
             transition: transform 0.2s;
         }
-        .input-area button:hover {
-            transform: scale(1.1);
-            background-color: #C2185B;
-        }
+        .send-btn:hover { transform: scale(1.1); background-color: #C2185B; }
 
-        .loading {
-            font-size: 0.8rem;
-            color: #888;
-            margin-left: 20px;
-            font-style: italic;
-            display: none;
-            margin-bottom: 10px;
-        }
     </style>
 </head>
 <body>
@@ -173,34 +165,36 @@
     <div class="chat-container">
         <div class="header">
             <h1>Sergio Fajardo</h1>
-            <p>Asistente Virtual de Propuestas</p>
+            <p>Salud • Corrupción • Seguridad</p>
         </div>
 
         <div class="chat-box" id="chatBox">
             <div class="message bot-msg">
-                👋 Hola. Soy el asistente oficial. Conoce mis propuestas sobre <strong>Salud</strong>, <strong>Seguridad</strong> y <strong>Corrupción</strong>.
+                Hola 👋. Soy el asistente virtual de la campaña. Respondo de forma breve sobre nuestras propuestas. ¿Qué quieres saber?
             </div>
         </div>
 
-        <div class="loading" id="loadingMsg">Consultando propuestas...</div>
+        <div class="loading" id="loadingMsg">Consultando... (Esto puede tardar unos segundos si el servidor estaba dormido)</div>
 
         <div class="suggestions">
-            <button class="chip" onclick="quickAsk('¿Qué propones en Salud?')">🏥 Salud</button>
-            <button class="chip" onclick="quickAsk('¿Cómo combatir la Corrupción?')">⚖️ Corrupción</button>
-            <button class="chip" onclick="quickAsk('¿Cuál es el plan de Seguridad?')">🛡️ Seguridad</button>
+            <button class="chip" onclick="askQuick('¿Qué propone para la Salud?')">🏥 Salud</button>
+            <button class="chip" onclick="askQuick('¿Cómo combatir la Corrupción?')">⚖️ Corrupción</button>
+            <button class="chip" onclick="askQuick('¿Cuál es el plan de Seguridad?')">🛡️ Seguridad</button>
         </div>
 
         <div class="input-area">
             <input type="text" id="userInput" placeholder="Escribe tu pregunta..." onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()">➤</button>
+            <button class="send-btn" onclick="sendMessage()">➤</button>
         </div>
     </div>
 
     <script>
-        // Historial simple para mantener contexto
+        // URL DE TU SERVIDOR EN RENDER
+        const BACKEND_URL = "https://ingles-646a.onrender.com/api/chat";
+        
         let chatHistory = [];
 
-        function quickAsk(text) {
+        function askQuick(text) {
             document.getElementById("userInput").value = text;
             sendMessage();
         }
@@ -210,54 +204,51 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // 1. Mostrar mensaje usuario
-            appendMessage(text, "user");
+            // 1. Mostrar mensaje del usuario
+            addMessage(text, 'user');
             input.value = "";
             document.getElementById("loadingMsg").style.display = "block";
 
             try {
-                // 2. Enviar a nuestro backend Python en Render
-                const response = await fetch('/api/chat', {
+                // 2. Conectar con tu servidor Render
+                const response = await fetch(BACKEND_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         message: text,
-                        history: chatHistory 
+                        history: chatHistory
                     })
                 });
 
                 const data = await response.json();
-                
-                // 3. Mostrar respuesta
+
                 if (data.error) {
-                    appendMessage("Hubo un error al consultar. Intenta de nuevo.", "bot");
-                    console.error(data.error);
+                    addMessage("Hubo un error: " + data.error, 'bot');
                 } else {
-                    appendMessage(data.reply, "bot");
-                    
-                    // Guardar en historial (sin enviar archivos de nuevo, solo texto)
+                    addMessage(data.reply, 'bot');
+                    // Guardar historial
                     chatHistory.push({ role: "user", parts: [{ text: text }] });
                     chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
                 }
 
             } catch (error) {
-                appendMessage("Error de conexión con el servidor.", "bot");
+                console.error(error);
+                addMessage("Error de conexión. Puede que el servidor se esté despertando, intenta de nuevo en 30 segundos.", 'bot');
             } finally {
                 document.getElementById("loadingMsg").style.display = "none";
             }
         }
 
-        function appendMessage(text, sender) {
+        function addMessage(text, sender) {
             const box = document.getElementById("chatBox");
             const div = document.createElement("div");
             div.className = `message ${sender}-msg`;
             
-            // Formatear negritas y listas
+            // Formatear texto (negritas y saltos de línea)
             let formatted = text
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Negrita
-                .replace(/^\*\s/gm, '• ') // Viñetas
-                .replace(/\n/g, '<br>'); // Saltos de línea
-
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n/g, '<br>');
+            
             div.innerHTML = formatted;
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
