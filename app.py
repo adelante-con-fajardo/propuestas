@@ -58,7 +58,7 @@ def chat():
     }
 
     try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={API_KEY}"
         response = requests.post(url, json=payload)
         response_data = response.json()
 
