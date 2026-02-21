@@ -56,7 +56,7 @@ def chat():
         "contents": contents,
         "generationConfig": {
             "temperature": 0.1,
-            "maxOutputTokens": 400,   # respuestas cortas
+            #"maxOutputTokens": 400,   # respuestas cortas
             "topP": 0.95
         }
     }
