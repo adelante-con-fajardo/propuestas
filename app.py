@@ -46,15 +46,19 @@ def chat():
     # Armar historial + mensaje actual con archivos
     current_turn = {
         "role": "user",
-        "parts": files_context + [{"text": user_message}]
+        "parts": [{"text": user_message}]
     }
-    
-    # Solo enviamos el historial de texto previo + el turno actual con archivos
+
     contents = history + [current_turn]
 
     payload = {
-        "system_instruction": system_instruction,
-        "contents": contents
+        "cachedContent": "cachedContents/x9ijxd7jxa4g5bmt25uanxlg5go9oeflcc4fbu4c",  # ← pega el name que obtuviste
+        "contents": contents,
+        "generationConfig": {
+            "temperature": 0.1,
+            "maxOutputTokens": 400,   # respuestas cortas
+            "topP": 0.95
+        }
     }
 
     try:
