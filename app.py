@@ -71,6 +71,11 @@ def chat():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    # Este endpoint sirve para mantener la app despierta sin gastar API de Google
+    return jsonify({"status": "alive", "message": "I'm working!"}), 200
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 3000))  # Usa $PORT si está definido, de lo contrario 3000 localmente
     app.run(host='0.0.0.0', port=port)
