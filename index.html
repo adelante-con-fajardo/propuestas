@@ -7,79 +7,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Colores Institucionales - Mejora para más dopamina: más vibrantes y contrastados */
-            --primary: #6A1B9A;      /* Morado vibrante */
-            --secondary: #AB47BC;    /* Morado claro para gradientes */
-            --accent: #EC407A;       /* Rosa/magenta más brillante para energía */
-            --bg-color: #FAEFFE;     /* Fondo lila muy suave, menos cansino */
+            --primary: #6A1B9A;
+            --secondary: #AB47BC;
+            --accent: #EC407A;
+            --bg-color: #FAEFFE;
             --chat-bg: #FFFFFF;
-            --text-color: #212121;   /* Texto oscuro para alto contraste */
-            --user-bg: #E1BEE7;      /* Lila claro para usuario */
-            --bot-bg: #F3E5F5;       /* Fondo bot suave */
-            --shadow-color: rgba(106, 27, 154, 0.15); /* Sombra suave */
+            --text-color: #212121;
+            --user-bg: #E1BEE7;
+            --bot-bg: #F3E5F5;
+            --shadow-color: rgba(106, 27, 154, 0.15);
         }
 
         body {
-            font-family: 'Roboto', sans-serif; /* Fuente moderna, legible, menos cansina */
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
             background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             color: var(--text-color);
         }
 
         .chat-container {
             width: 100%;
-            max-width: 500px; /* Un poco más ancho para comodidad */
-            height: 90vh;
+            max-width: 520px;
+            height: 95vh;
             background: var(--chat-bg);
-            border-radius: 24px; /* Bordes más suaves */
-            box-shadow: 0 12px 30px var(--shadow-color);
+            border-radius: 24px;
+            box-shadow: 0 10px 25px var(--shadow-color);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            position: relative;
-            transition: box-shadow 0.3s ease; /* Efecto dopaminico al hover */
         }
-        .chat-container:hover { box-shadow: 0 15px 40px var(--shadow-color); }
 
         .header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 24px;
+            padding: 20px;
             text-align: center;
-            border-bottom: 5px solid var(--accent);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-bottom: 4px solid var(--accent);
         }
-        .header h1 { margin: 0; font-size: 1.6rem; font-weight: 700; letter-spacing: 0.5px; }
-        .header p { margin: 6px 0 0; font-size: 0.95rem; opacity: 0.95; font-weight: 500; }
+        .header h1 { margin: 0; font-size: 1.7rem; font-weight: 700; }
+        .header p { margin: 8px 0 0; font-size: 1rem; opacity: 0.95; }
 
         .chat-box {
             flex: 1;
-            padding: 24px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            background: linear-gradient(to bottom, #fff, var(--bg-color)); /* Gradiente suave para profundidad */
-            scroll-behavior: smooth; /* Scroll dopaminico suave */
+            gap: 16px;
+            background: linear-gradient(to bottom, #fff, var(--bg-color));
+            scroll-behavior: smooth;
         }
 
         .message {
-            max-width: 85%;
-            padding: 14px 18px;
-            border-radius: 22px;
-            font-size: 1rem; /* Texto más grande para menos cansancio */
-            line-height: 1.6; /* Espaciado para legibilidad */
-            animation: fadeInUp 0.4s ease, pulse 0.5s ease; /* Animaciones dopaminicas */
-            box-shadow: 0 2px 5px var(--shadow-color);
+            max-width: 82%;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 1.05rem;
+            line-height: 1.55;
+            box-shadow: 0 1px 4px var(--shadow-color);
         }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
 
         .bot-msg {
             background-color: var(--bot-bg);
@@ -97,23 +88,31 @@
         }
 
         .loading {
-            font-size: 0.85rem;
-            color: #757575;
-            margin-left: 24px;
-            font-style: italic;
             display: none;
-            margin-bottom: 12px;
-            animation: fadeIn 0.3s ease;
+            padding: 16px 24px;
+            color: #555;
+            font-style: italic;
+            font-size: 0.95rem;
         }
+        .loading-visible { display: block; }
 
-        /* Botones de sugerencias - Más dopaminicos con escala y color */
+        .spinner {
+            width: 24px; height: 24px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         .suggestions {
             display: flex;
             gap: 10px;
-            padding: 12px 18px;
-            background: #fff;
+            padding: 12px 16px;
+            background: white;
             overflow-x: auto;
-            border-top: 1px solid #f0f0f0;
+            border-top: 1px solid #eee;
             scrollbar-width: none;
         }
         .suggestions::-webkit-scrollbar { display: none; }
@@ -122,64 +121,57 @@
             background: linear-gradient(135deg, #fff, var(--user-bg));
             border: 1.5px solid var(--primary);
             color: var(--primary);
-            padding: 10px 16px;
-            border-radius: 24px;
-            font-size: 0.9rem;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.92rem;
             cursor: pointer;
             white-space: nowrap;
-            transition: transform 0.2s, background 0.2s;
-            font-weight: 500;
-            box-shadow: 0 2px 4px var(--shadow-color);
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px var(--shadow-color);
         }
         .chip:hover {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            transform: scale(1.05); /* Efecto dopaminico */
+            transform: translateY(-1px);
         }
 
         .input-area {
             display: flex;
-            padding: 18px;
+            padding: 16px;
             background: white;
             border-top: 1px solid #eee;
         }
         .input-area input {
             flex: 1;
-            padding: 14px 22px;
-            border: 1.5px solid #ddd;
+            padding: 14px 20px;
+            border: 1.5px solid #ccc;
             border-radius: 30px;
             outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            font-size: 1rem;
-            color: var(--text-color);
+            font-size: 1.05rem;
+            transition: all 0.25s;
         }
-        .input-area input:focus { 
-            border-color: var(--accent); 
-            box-shadow: 0 0 8px rgba(236, 64, 122, 0.3); /* Glow dopaminico */
+        .input-area input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(236, 64, 122, 0.2);
         }
-        .input-area input::placeholder { color: #9E9E9E; }
+        .input-area input::placeholder { color: #aaa; }
 
         .send-btn {
             background: linear-gradient(135deg, var(--accent), #D81B60);
             color: white;
             border: none;
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             margin-left: 12px;
             cursor: pointer;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 3px 6px rgba(236, 64, 122, 0.2);
+            transition: all 0.2s;
         }
-        .send-btn:hover { 
-            transform: scale(1.12) rotate(15deg); /* Rotación divertida para dopamina */
-            box-shadow: 0 4px 8px rgba(236, 64, 122, 0.4);
-        }
-
+        .send-btn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -192,11 +184,19 @@
 
         <div class="chat-box" id="chatBox">
             <div class="message bot-msg">
-                Hola 👋. Soy el asistente virtual de la campaña. Respondo de forma breve sobre nuestras propuestas. ¿Qué quieres saber?
+                Hola 👋. Soy el asistente virtual de la campaña. Respondo de forma breve sobre nuestras propuestas en Salud, Corrupción y Seguridad. ¿Qué quieres saber?
             </div>
         </div>
 
-        <div class="loading" id="loadingMsg">Consultando... (Esto puede tardar unos segundos si el servidor estaba dormido)</div>
+        <div class="loading" id="loadingMsg">
+            <div style="display: flex; align-items: center;">
+                <div class="spinner"></div>
+                <div>
+                    <strong>Consultando propuestas...</strong><br>
+                    <span id="loadingText">Analizando documentos oficiales. Puede tardar 10-40 segundos (más si el servidor estaba dormido).</span>
+                </div>
+            </div>
+        </div>
 
         <div class="suggestions">
             <button class="chip" onclick="askQuick('¿Qué propone para la Salud?')">🏥 Salud</button>
@@ -211,9 +211,7 @@
     </div>
 
     <script>
-        // URL DE TU SERVIDOR EN RENDER
         const BACKEND_URL = "https://propuestas-rc75.onrender.com/api/chat";
-        
         let chatHistory = [];
 
         function askQuick(text) {
@@ -226,13 +224,22 @@
             const text = input.value.trim();
             if (!text) return;
 
-            // 1. Mostrar mensaje del usuario
             addMessage(text, 'user');
             input.value = "";
-            document.getElementById("loadingMsg").style.display = "block";
+            
+            const loading = document.getElementById("loadingMsg");
+            const loadingText = document.getElementById("loadingText");
+            loading.classList.add("loading-visible");
+
+            // Texto dinámico para dar feedback
+            loadingText.textContent = "Procesando con IA...";
+            setTimeout(() => {
+                if (loading.classList.contains("loading-visible")) {
+                    loadingText.textContent = "Un momento más, los documentos son extensos...";
+                }
+            }, 10000);  // Cambia mensaje después de 10 segundos
 
             try {
-                // 2. Conectar con tu servidor Render
                 const response = await fetch(BACKEND_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -245,19 +252,17 @@
                 const data = await response.json();
 
                 if (data.error) {
-                    addMessage("Hubo un error: " + data.error, 'bot');
+                    addMessage("Error: " + data.error, 'bot');
                 } else {
                     addMessage(data.reply, 'bot');
-                    // Guardar historial
-                    chatHistory.push({ role: "user", parts: [{ text: text }] });
+                    chatHistory.push({ role: "user", parts: [{ text }] });
                     chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
                 }
-
             } catch (error) {
                 console.error(error);
-                addMessage("Error de conexión. Puede que el servidor se esté despertando, intenta de nuevo en 30 segundos.", 'bot');
+                addMessage("Error de conexión. Intenta de nuevo en unos segundos (el servidor puede estar despertando).", 'bot');
             } finally {
-                document.getElementById("loadingMsg").style.display = "none";
+                loading.classList.remove("loading-visible");
             }
         }
 
@@ -266,7 +271,6 @@
             const div = document.createElement("div");
             div.className = `message ${sender}-msg`;
             
-            // Formatear texto (negritas y saltos de línea)
             let formatted = text
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\n/g, '<br>');
@@ -277,7 +281,10 @@
         }
 
         function handleEnter(e) {
-            if (e.key === "Enter") sendMessage();
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
         }
     </script>
 </body>
