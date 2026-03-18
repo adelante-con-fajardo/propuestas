@@ -4,16 +4,22 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-# ¡IMPORTANTE! Esto permite que tu HTML (alojado en otro lado) se conecte aquí
 CORS(app)
 
 # Tu API Key debe estar en las variables de entorno de Render
 API_KEY = os.environ.get("API_KEY")
 
-# URIs de los archivos
-URI_SALUD = "https://generativelanguage.googleapis.com/v1beta/files/ikkurp1hiuei"
-URI_CORRUPCION = "https://generativelanguage.googleapis.com/v1beta/files/rkv51zo5ix9c"
-URI_SEGURIDAD = "https://generativelanguage.googleapis.com/v1beta/files/6wcib2234ll7"
+# ==================== CAMBIO PRINCIPAL ====================
+# REEMPLAZA ESTE URI con el que te dé Google cuando subas tu PDF "programa_gobierno"
+URI_PROGRAMA_GOBIERNO = "https://generativelanguage.googleapis.com/v1beta/files/bgo499repak4"  
+# Ejemplo: https://generativelanguage.googleapis.com/v1beta/files/abc123def456
+
+# ==================== CACHED CONTENT ====================
+# DEBES crear un nuevo CachedContent con SOLO este archivo.
+# Instrucción rápida: ve a Google AI Studio → Files → sube el PDF → crea Cached Content con ese archivo
+# y pega aquí el "name" que te dé (empieza con cachedContents/...)
+CACHED_CONTENT_NAME = "cachedContents/t3urovieuwzla77b9znecslvhdtfvyx34kll3afw"  
+# Ejemplo: "cachedContents/xyz789abc123def456"
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -24,26 +30,23 @@ def chat():
     user_message = data.get('message', '')
     history = data.get('history', [])
 
-    # Contexto de archivos
+    # Solo 1 archivo ahora
     files_context = [
-        {"fileData": {"mimeType": "application/pdf", "fileUri": URI_SALUD}},
-        {"fileData": {"mimeType": "application/pdf", "fileUri": URI_CORRUPCION}},
-        {"fileData": {"mimeType": "application/pdf", "fileUri": URI_SEGURIDAD}}
+        {"fileData": {"mimeType": "application/pdf", "fileUri": URI_PROGRAMA_GOBIERNO}}
     ]
 
-    # Instrucción de sistema (Respuestas cortas y estilo Fajardo)
+    # Instrucción de sistema actualizada (solo 1 documento)
     system_instruction = {
         "parts": [{
             "text": """Eres el asistente de la campaña de Sergio Fajardo. 
             REGLAS:
             1. Responde de forma MUY CORTA y directa (máximo 2 párrafos breves).
             2. Usa tono pedagógico y decente.
-            3. Basa tu respuesta SOLO en los documentos de Salud, Corrupción y Seguridad adjuntos.
-            4. Si preguntan de otro tema, di amablemente que solo manejas esas 3 propuestas."""
+            3. Basa tu respuesta SOLO en el documento "Programa de Gobierno" adjunto.
+            4. Si preguntan de otro tema, di amablemente que solo manejas el Plan de Gobierno completo de Sergio Fajardo."""
         }]
     }
 
-    # Armar historial + mensaje actual con archivos
     current_turn = {
         "role": "user",
         "parts": [{"text": user_message}]
@@ -52,11 +55,10 @@ def chat():
     contents = history + [current_turn]
 
     payload = {
-        "cachedContent": "cachedContents/x9ijxd7jxa4g5bmt25uanxlg5go9oeflcc4fbu4c",  # ← pega el name que obtuviste
+        "cachedContent": CACHED_CONTENT_NAME,
         "contents": contents,
         "generationConfig": {
             "temperature": 0.1,
-            #"maxOutputTokens": 400,   # respuestas cortas
             "topP": 0.95
         }
     }
@@ -77,9 +79,8 @@ def chat():
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    # Este endpoint sirve para mantener la app despierta sin gastar API de Google
     return jsonify({"status": "alive", "message": "I'm working!"}), 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 3000))  # Usa $PORT si está definido, de lo contrario 3000 localmente
+    port = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=port)
