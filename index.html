@@ -170,8 +170,35 @@
             <button class="send-btn" onclick="sendMessage()">➤</button>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+
+        // --- CONFIGURACIÓN SUPABASE ---
+        // Reemplaza con tus credenciales de el Dashboard de Supabase -> Settings -> API
+        const SUPABASE_URL = 'https://rbipvhgyhrhmfzhcmoms.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiaXB2aGd5aHJobWZ6aGNtb21zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxMTA2MjQsImV4cCI6MjA4MTY4NjYyNH0.bUykMfOOmDJckkHydUiYlLjJ93clzvfU0KCh27ivHlw';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Función para registrar la visita automáticamente
+        async function registrarVisita() {
+            try {
+                const { error } = await _supabase
+                    .from('page_visits_fajardo') // Nombre de tu tabla en Supabase
+                    .insert([
+                        { 
+                            user_agent: navigator.userAgent, // Opcional: para saber desde qué navegador entran
+                            platform: navigator.platform      // Opcional: para saber si es móvil o PC
+                        }
+                    ]);
+                
+                if (error) console.error("Error al registrar visita:", error);
+            } catch (err) {
+                console.error("Error de conexión con Supabase:", err);
+            }
+        }
+
+        // Ejecutar el registro en cuanto cargue la página
+        document.addEventListener('DOMContentLoaded', registrarVisita);
         // Función para ocultar la flecha cuando el usuario hace clic en el input
         function hideArrow() {
             const arrow = document.getElementById("typingArrow");
