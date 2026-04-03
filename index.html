@@ -1,306 +1,822 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gobierno Fajardo</title>
-      <link rel="icon" href="icono_bg.png" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            /* Colores extraídos de la imagen de la campaña */
-            --primary: #003A8C; /* Azul oscuro */
-            --secondary: #C1272D; /* Rojo */
-            --accent: #F3B229; /* Amarillo/Mostaza */
-            --bg-color: #F0F2F5;
-            --chat-bg: #FFFFFF;
-            --text-color: #263238;
-            --user-bg: #E3F2FD; /* Azul muy claro para usuario */
-            --bot-bg: #FFFDE7; /* Amarillo muy claro para bot */
-            --shadow-color: rgba(0, 58, 140, 0.15);
-        }
-        body { font-family: 'Roboto', sans-serif; margin: 0; background-color: var(--bg-color); display: flex; justify-content: center; align-items: center; margin-top: 1rem; }
-        .chat-container { width: 100%; max-width: 550px; height: 92vh; background: var(--chat-bg); border-radius: 20px; box-shadow: 0 12px 28px var(--shadow-color); display: flex; flex-direction: column; overflow: hidden; border: 2px solid var(--accent); }
-        
-        /* Estilos del Header inspirados exactamente en la imagen */
-        .header { background: var(--accent); padding: 20px 15px; text-align: center; border-bottom: 6px solid var(--primary); }
-        .header .slogan { color: var(--primary); font-size: 1.4rem; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-        .header h1 { margin: 0; font-size: 3rem; background: var(--secondary); color: var(--accent); display: inline-block; padding: 5px 20px; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; line-height: 1; }
-        .header .sub-slogan { margin-top: 10px; font-size: 0.95rem; font-weight: 700; color: var(--primary); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fajardo 2026 — Programa de Gobierno</title>
+  <link rel="icon" href="icono_bg.png" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy:       #003A8C;
+      --navy-dark:  #002060;
+      --red:        #C1272D;
+      --red-soft:   #FFF0F0;
+      --yellow:     #F3B229;
+      --yellow-soft:#FFFBF0;
+      --teal:       #0077B6;
+      --teal-soft:  #EFF8FF;
+      --green:      #1B6B3A;
+      --green-soft: #F0FAF4;
+      --bg:         #EEF0F5;
+      --white:      #FFFFFF;
+      --text:       #1A1A2E;
+      --gray:       #6B7280;
+      --shadow-sm:  0 2px 10px rgba(0,58,140,0.08);
+      --shadow-md:  0 6px 24px rgba(0,58,140,0.14);
+      --shadow-lg:  0 12px 40px rgba(0,58,140,0.2);
+    }
 
-        .chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #fff; }
-        
-        
-        .message { 
-            max-width: 85%; 
-            padding: 14px 18px; /* Un poco más de espacio interno para que respire */
-            border-radius: 15px; 
-            font-size: 1.05rem; /* Letra ligeramente más grande */
-            line-height: 1.6; /* Mayor interlineado (clave para textos largos) */
-            letter-spacing: 0.3px; /* Separación sutil entre letras */
-            box-shadow: 0 2px 5px rgba(0,0,0,0.04); /* Sombra muy suave */
-        }
-        .bot-msg { 
-            background-color: var(--bot-bg); 
-            align-self: flex-start; 
-            border-bottom-left-radius: 2px; 
-            border: 1px solid #FFF59D; 
-            color: #1A1A1A; /* Negro casi puro para máximo contraste y claridad */
-        }
-        .user-msg { 
-            background-color: var(--user-bg); 
-            color: var(--primary); 
-            align-self: flex-end; 
-            border-bottom-right-radius: 2px; 
-            font-weight: 600; /* Un poco más gruesa para diferenciarla */
-        }
-        
-        .loading { display: none; padding: 15px; text-align: center; font-size: 0.9rem; color: #666; font-weight: 500; }
-        .loading-visible { display: block; }
-        
-        .suggestions { display: flex; gap: 8px; padding: 10px; background: #f9f9f9; overflow-x: auto; border-top: 1px solid #eee; }
-        .chip { background: white; border: 2px solid var(--primary); color: var(--primary); padding: 8px 15px; border-radius: 20px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; transition: 0.3s; font-weight: 700; }
-        .chip:hover { background: var(--primary); color: var(--accent); }
-        
-        .input-area { display: flex; padding: 15px; background: white; border-top: 1px solid #eee; }
-        .input-area input { flex: 1; padding: 12px 18px; border: 2px solid #ddd; border-radius: 25px; outline: none; font-size: 1rem; transition: 0.3s; }
-        .input-area input:focus { border-color: var(--primary); }
-        .send-btn { background: var(--secondary); color: white; border: none; width: 48px; height: 48px; border-radius: 50%; margin-left: 10px; cursor: pointer; transition: 0.2s; font-size: 1.2rem; display: flex; justify-content: center; align-items: center; }
-        .send-btn:hover { background: #9E1D22; transform: scale(1.05); }
-        .input-area { 
-            display: flex; 
-            padding: 15px; 
-            background: white; 
-            border-top: 1px solid #eee; 
-            position: relative; /* <-- AÑADE ESTO para que la flecha se posicione bien */
-        }
-        
-        /* ================= NUEVOS ESTILOS PARA LA FLECHA ================= */
-        .bouncing-arrow {
-            position: absolute;
-            top: -38px;
-            left: 20px;
-            background-color: var(--secondary); /* Rojo campaña para llamar la atención */
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            animation: bounce 1.5s infinite;
-            pointer-events: none; /* Evita que estorbe si le hacen clic encima */
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            z-index: 10;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* El piquito del globo apuntando hacia abajo */
-        .bouncing-arrow::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 20px;
-            border-width: 6px 6px 0;
-            border-style: solid;
-            border-color: var(--secondary) transparent transparent transparent;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 1rem 0.5rem;
+    }
 
-        /* Animación de rebote */
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
+    .chat-container {
+      width: 100%;
+      max-width: 620px;
+      height: 96vh;
+      background: var(--bg);
+      border-radius: 28px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid rgba(243,178,41,0.25);
+    }
 
-        /* Clase para ocultar la flecha cuando escriban */
-        .hide-arrow {
-            opacity: 0;
-            visibility: hidden;
-        }
+    /* ===================== HEADER ===================== */
+    .header {
+      background: linear-gradient(135deg, var(--navy-dark) 0%, #004AB5 100%);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-bottom: 3px solid var(--yellow);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .header::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(243,178,41,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header::after {
+      content: '';
+      position: absolute; bottom: -30px; left: 30%;
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-logo {
+      background: var(--red);
+      color: var(--yellow);
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 1.75rem;
+      padding: 5px 16px;
+      border-radius: 10px;
+      letter-spacing: 2px;
+      line-height: 1.15;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .header-info { flex: 1; min-width: 0; }
+    .header-slogan {
+      color: var(--yellow);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      opacity: 0.85;
+    }
+    .header-title {
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .header-status {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: white;
+      font-size: 0.7rem;
+      padding: 5px 11px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .dot-online {
+      width: 7px; height: 7px;
+      background: #4ADE80;
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+      50% { opacity: 0.6; box-shadow: 0 0 0 4px rgba(74,222,128,0); }
+    }
 
-        /* ================= ESTILOS PARA LISTAS HTML EN EL CHAT ================= */
-        .message ul { 
-            margin: 8px 0; /* Espacio arriba y abajo de la lista */
-            padding-left: 20px; /* Sangría para las viñetas */
-            list-style-type: disc; /* Usar viñetas estándar (discos) */
-        }
-        .message li { 
-            margin-bottom: 6px; /* Espacio entre cada punto de la lista */
-            color: #1A1A1A; /* Mismo color de texto que el bot */
-        }
-    </style>
+    /* ===================== CHAT BOX ===================== */
+    .chat-box {
+      flex: 1;
+      padding: 18px 14px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      scroll-behavior: smooth;
+    }
+    .chat-box::-webkit-scrollbar { width: 4px; }
+    .chat-box::-webkit-scrollbar-track { background: transparent; }
+    .chat-box::-webkit-scrollbar-thumb { background: rgba(0,58,140,0.15); border-radius: 4px; }
+
+    /* ===================== GREETING ===================== */
+    .greeting-card {
+      background: var(--white);
+      border-radius: 18px;
+      padding: 18px 20px;
+      border-left: 5px solid var(--yellow);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      animation: slideUp 0.4s ease;
+    }
+    .greeting-icon { font-size: 2rem; flex-shrink: 0; line-height: 1; }
+    .greeting-text {
+      font-size: 0.93rem;
+      line-height: 1.7;
+      color: var(--text);
+      font-family: 'Source Serif 4', serif;
+    }
+
+    /* ===================== EXCHANGE GROUP ===================== */
+    .exchange-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: slideUp 0.35s ease;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===================== QUESTION CARD ===================== */
+    .question-card {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+      border-radius: 18px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 6px 28px rgba(0,58,140,0.28);
+      position: relative;
+      overflow: hidden;
+    }
+    .question-card::before {
+      content: '?';
+      position: absolute; right: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Oswald', sans-serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: rgba(243,178,41,0.08);
+      line-height: 1;
+      pointer-events: none;
+    }
+    .question-badge {
+      background: var(--yellow);
+      color: var(--navy-dark);
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .question-text {
+      color: white;
+      font-family: 'Source Serif 4', serif;
+      font-size: 0.97rem;
+      font-weight: 600;
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    /* ===================== RESPONSE CARDS ===================== */
+    .response-cards { display: flex; flex-direction: column; gap: 8px; }
+
+    .resp-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      animation: slideUp 0.4s ease backwards;
+    }
+    .resp-card:nth-child(1) { animation-delay: 0.08s; }
+    .resp-card:nth-child(2) { animation-delay: 0.18s; }
+    .resp-card:nth-child(3) { animation-delay: 0.28s; }
+
+    .card-header {
+      padding: 11px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-header-emoji { font-size: 1.25rem; line-height: 1; }
+    .card-header-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      flex: 1;
+    }
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      opacity: 0.75;
+    }
+
+    /* Problem — Red */
+    .card-problem .card-header { background: var(--red); }
+    .card-problem .card-header-title { color: white; }
+    .card-problem .card-tag { background: rgba(255,255,255,0.2); color: white; }
+    .card-problem { border: 1px solid rgba(193,39,45,0.12); }
+
+    /* Goal — Teal */
+    .card-goal .card-header { background: var(--teal); }
+    .card-goal .card-header-title { color: white; }
+    .card-goal .card-tag { background: rgba(255,255,255,0.2); color: white; }
+    .card-goal { border: 1px solid rgba(0,119,182,0.12); }
+
+    /* Plan — Green */
+    .card-plan .card-header { background: var(--green); }
+    .card-plan .card-header-title { color: white; }
+    .card-plan .card-tag { background: rgba(255,255,255,0.2); color: white; }
+    .card-plan { border: 1px solid rgba(27,107,58,0.12); }
+
+    /* Generic — Yellow */
+    .card-generic .card-header { background: var(--yellow); }
+    .card-generic .card-header-title { color: var(--navy-dark); }
+    .card-generic { border: 1px solid rgba(243,178,41,0.25); }
+
+    /* ===================== CARD BODY ===================== */
+    .card-body {
+      padding: 14px 18px 16px;
+      font-size: 0.91rem;
+      line-height: 1.75;
+      color: var(--text);
+      font-family: 'Source Serif 4', serif;
+    }
+
+    /* Stat callout badges */
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #FFF3CD;
+      color: #8B3A00;
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1em;
+      padding: 1px 7px;
+      border-radius: 6px;
+      border: 1px solid rgba(193,39,45,0.18);
+      margin: 0 1px;
+    }
+    .card-goal .stat-pill  { background: var(--teal-soft);  color: var(--teal); border-color: rgba(0,119,182,0.2); }
+    .card-plan .stat-pill  { background: var(--green-soft); color: var(--green); border-color: rgba(27,107,58,0.2); }
+
+    /* Lists */
+    .card-body ul {
+      list-style: none;
+      padding: 0;
+      margin: 10px 0 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card-body ul li {
+      padding: 8px 12px 8px 30px;
+      border-radius: 9px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      position: relative;
+    }
+    .card-problem .card-body ul li { background: var(--red-soft); }
+    .card-problem .card-body ul li::before { content: '▸'; position: absolute; left: 12px; top: 9px; color: var(--red); font-size: 0.8rem; }
+    .card-goal .card-body ul li { background: var(--teal-soft); }
+    .card-goal .card-body ul li::before { content: '▸'; position: absolute; left: 12px; top: 9px; color: var(--teal); font-size: 0.8rem; }
+    .card-plan .card-body ul li { background: var(--green-soft); }
+    .card-plan .card-body ul li::before { content: '▸'; position: absolute; left: 12px; top: 9px; color: var(--green); font-size: 0.8rem; }
+    .card-generic .card-body ul li { background: var(--yellow-soft); }
+    .card-generic .card-body ul li::before { content: '▸'; position: absolute; left: 12px; top: 9px; color: var(--navy); font-size: 0.8rem; }
+
+    /* Impact phrase (last callout inside plan card) */
+    .impact-line {
+      margin-top: 12px;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, #EBF5FF, #DCEEFF);
+      border-left: 3px solid var(--navy);
+      border-radius: 8px;
+      font-style: italic;
+      font-size: 0.87rem;
+      color: var(--navy-dark);
+      font-family: 'Source Serif 4', serif;
+    }
+
+    /* ===================== SKELETON LOADING ===================== */
+    .skeleton-group { display: flex; flex-direction: column; gap: 8px; }
+
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .sk {
+      border-radius: 16px;
+      background: linear-gradient(90deg, #dde3f0 25%, #c8d0e8 50%, #dde3f0 75%);
+      background-size: 400px 100%;
+      animation: shimmer 1.4s infinite;
+    }
+    .sk-question { height: 56px; }
+    .sk-card { animation-delay: 0.1s; }
+    .sk-card:nth-child(2) { height: 110px; animation-delay: 0.2s; }
+    .sk-card:nth-child(3) { height: 130px; animation-delay: 0.3s; }
+    .sk-card:nth-child(4) { height: 120px; animation-delay: 0.4s; }
+
+    /* ===================== CHIPS ===================== */
+    .suggestions {
+      display: flex;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--white);
+      overflow-x: auto;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+    .suggestions::-webkit-scrollbar { height: 0; }
+    .chip {
+      background: white;
+      border: 1.5px solid var(--navy);
+      color: var(--navy);
+      padding: 7px 13px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: background 0.18s, color 0.18s;
+      flex-shrink: 0;
+    }
+    .chip:hover { background: var(--navy); color: var(--yellow); }
+    .chip:active { transform: scale(0.96); }
+
+    /* ===================== INPUT AREA ===================== */
+    .input-area {
+      display: flex;
+      padding: 12px 14px;
+      background: var(--white);
+      gap: 10px;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .input-area input {
+      flex: 1;
+      padding: 11px 18px;
+      border: 2px solid #D1D5DB;
+      border-radius: 25px;
+      outline: none;
+      font-size: 0.93rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.2s, background 0.2s;
+      color: var(--text);
+      background: var(--bg);
+    }
+    .input-area input:focus {
+      border-color: var(--navy);
+      background: white;
+    }
+    .send-btn {
+      background: var(--red);
+      color: white;
+      border: none;
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .send-btn:hover { background: #9E1D22; transform: scale(1.06); }
+    .send-btn:active { transform: scale(0.94); }
+
+    /* ===================== BOUNCING ARROW ===================== */
+    .bouncing-arrow {
+      position: absolute;
+      top: -42px; left: 18px;
+      background: var(--red);
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(193,39,45,0.3);
+      animation: bounce 1.5s infinite;
+      pointer-events: none;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 10;
+    }
+    .bouncing-arrow::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 22px;
+      border-width: 6px 6px 0;
+      border-style: solid;
+      border-color: var(--red) transparent transparent;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-9px); }
+      65% { transform: translateY(-4px); }
+    }
+    .hide-arrow { opacity: 0; visibility: hidden; }
+
+    /* Estilo mejorado para los links del programa */
+    .card-body a {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 8px 16px;
+        background-color: var(--navy); /* Azul de la campaña */
+        color: #ffffff !important;   /* Texto blanco */
+        text-decoration: none;
+        border-radius: 50px;         /* Bordes redondeados */
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: lowercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 12px rgba(0, 58, 140, 0.2);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-body a:hover {
+        background-color: var(--red); /* Cambia a rojo al pasar el mouse */
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(193, 39, 45, 0.3);
+        color: white !important;
+    }
+
+    .card-body a::before {
+        content: '🔗 '; /* Icono antes del texto */
+        font-size: 0.9rem;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: #FFF3CD; /* Fondo amarillito */
+      color: #8B3A00;    /* Texto marrón/oscuro */
+      font-weight: 700;
+      font-family: 'Oswald', sans-serif;
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(193,39,45,0.15);
+      margin: 0 2px;
+      white-space: nowrap; /* Evita que el número se separe de la palabra */
+    }
+  </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="header">
-            <div class="slogan">Cambio. Serio. Seguro.</div>
-            <h1>Fajardo</h1>
-            <!--<div class="sub-slogan">Programa de Gobierno 2026</div>-->
-        </div>
-        <div class="chat-box" id="chatBox">
-            <div class="message bot-msg">
-                Hola. He analizado el programa de gobierno de Sergio Fajardo. ¿Tienes alguna duda sobre educación, economía, seguridad o sus reformas?
-            </div>
-        </div>
-        <div class="loading" id="loadingMsg">⏳ Analizando el documento oficial...</div>
-        <div class="suggestions">
-            <button class="chip" onclick="askQuick('¿Cuál es el Plan Guardián de Seguridad?')">🛡️ Seguridad (Plan Guardián)</button>
-            <button class="chip" onclick="askQuick('¿Qué propone para el sistema de Salud?')">🏥 Salud</button>
-            <button class="chip" onclick="askQuick('¿Cómo manejará las Finanzas Públicas y la Regla Fiscal?')">📈 Economía y Finanzas</button>
-            <button class="chip" onclick="askQuick('¿Cuál es la propuesta de Transición Energética?')">⚡ Energía</button>
-            <button class="chip" onclick="askQuick('¿Cómo combatirá la Corrupción?')">⚖️ Lucha Anticorrupción</button>
-            <button class="chip" onclick="askQuick('¿Qué reformas propone para la Justicia?')">🏛️ Justicia</button>
+  <div class="chat-container">
 
-            <button class="chip" onclick="askQuick('¿Qué propone para la Educación?')">🎓 Educación</button>
-            <button class="chip" onclick="askQuick('¿Cómo potenciará la Ciencia, Tecnología e Innovación?')">💻 Ciencia y Tecnología</button>
-            <button class="chip" onclick="askQuick('¿Cuál es el plan para el Emprendimiento?')">🚀 Emprendimiento</button>
-            <button class="chip" onclick="askQuick('¿Cómo impulsará la Agricultura y el desarrollo rural?')">🚜 Agro y Campo</button>
-            <button class="chip" onclick="askQuick('¿Qué dice sobre Medio Ambiente y Bioeconomía?')">🌿 Medio Ambiente</button>
-            <button class="chip" onclick="askQuick('¿Cuál es el plan de Infraestructura y Transporte?')">🛣️ Infraestructura</button>
-            <button class="chip" onclick="askQuick('¿Qué propone para el Turismo?')">🏝️ Turismo</button>
-
-            <button class="chip" onclick="askQuick('¿Qué propone para la Inclusión Social?')">🤝 Inclusión Social</button>
-            <button class="chip" onclick="askQuick('¿Cómo creará Empleo digno y productivo?')">💼 Empleo</button>
-            <button class="chip" onclick="askQuick('¿Cuál es su propuesta de Vivienda?')">🏠 Vivienda</button>
-            <button class="chip" onclick="askQuick('¿Qué propone para la Cultura y el Deporte?')">🎨 Cultura y Deporte</button>
-        </div>
-        <div class="input-area">
-            <div class="bouncing-arrow" id="typingArrow">👇 Escribe tu pregunta aquí</div>
-            
-            <input type="text" id="userInput" placeholder="Pregunta algo sobre el programa..." onkeypress="handleEnter(event)" onfocus="hideArrow()">
-            <button class="send-btn" onclick="sendMessage()">➤</button>
-        </div>
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-logo">FAJARDO</div>
+      <div class="header-info">
+        <div class="header-slogan">Cambio · Serio · Seguro</div>
+        <div class="header-title">Asistente de Programa de Gobierno 2026</div>
+      </div>
+      <div class="header-status">
+        <div class="dot-online"></div>En línea
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
 
-        // --- CONFIGURACIÓN SUPABASE ---
-        // Reemplaza con tus credenciales de el Dashboard de Supabase -> Settings -> API
-        const SUPABASE_URL = 'https://rbipvhgyhrhmfzhcmoms.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiaXB2aGd5aHJobWZ6aGNtb21zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxMTA2MjQsImV4cCI6MjA4MTY4NjYyNH0.bUykMfOOmDJckkHydUiYlLjJ93clzvfU0KCh27ivHlw';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <!-- CHAT BOX -->
+    <div class="chat-box" id="chatBox">
+      <div class="greeting-card">
+        <div class="greeting-icon">👨‍🏫</div>
+        <div class="greeting-text">
+  Colombia está a un paso del punto de no retorno. ⚠️ Mientras otros prometen, <strong>Sergio Fajardo</strong> ya tiene la hoja de ruta para rescatar nuestro futuro. No permitas que te sigan engañando. <strong>¿Quieres saber qué es lo que realmente va a pasar con tu país? Pregúntame ahora.</strong>
+</div>
+      </div>
+    </div>
+    <style>
+        .greeting-text {
+    font-size: 1.05rem; /* Un poco más grande que el resto */
+    font-weight: 500;
+}
+    </style>
 
-        // Función para registrar la visita automáticamente
-        async function registrarVisita() {
-            try {
-                const { error } = await _supabase
-                    .from('page_visits_fajardo') // Nombre de tu tabla en Supabase
-                    .insert([
-                        { 
-                            user_agent: navigator.userAgent, // Opcional: para saber desde qué navegador entran
-                            platform: navigator.platform      // Opcional: para saber si es móvil o PC
-                        }
-                    ]);
-                
-                if (error) console.error("Error al registrar visita:", error);
-            } catch (err) {
-                console.error("Error de conexión con Supabase:", err);
-            }
+    <!-- CHIPS -->
+    <div class="suggestions">
+      <button class="chip" onclick="askQuick('¿Cuál es el Plan Guardián de Seguridad?')">🛡️ Seguridad</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para el sistema de Salud?')">🏥 Salud</button>
+      <button class="chip" onclick="askQuick('¿Cómo manejará las Finanzas Públicas y la Regla Fiscal?')">📈 Economía</button>
+      <button class="chip" onclick="askQuick('¿Cuál es la propuesta de Transición Energética?')">⚡ Energía</button>
+      <button class="chip" onclick="askQuick('¿Cómo combatirá la Corrupción?')">⚖️ Anticorrupción</button>
+      <button class="chip" onclick="askQuick('¿Qué reformas propone para la Justicia?')">🏛️ Justicia</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para la Educación?')">📚 Educación</button>
+      <button class="chip" onclick="askQuick('¿Cuál es el plan para el Emprendimiento?')">🚀 Emprendimiento</button>
+      <button class="chip" onclick="askQuick('¿Cómo impulsará la Agricultura y el desarrollo rural?')">🚜 Campo</button>
+      <button class="chip" onclick="askQuick('¿Qué dice sobre Medio Ambiente y Bioeconomía?')">🌿 Ambiente</button>
+      <button class="chip" onclick="askQuick('¿Cuál es el plan de Infraestructura y Transporte?')">🛣️ Infraestructura</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para el Turismo?')">🏝️ Turismo</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para la Inclusión Social?')">🤝 Inclusión</button>
+      <button class="chip" onclick="askQuick('¿Cómo creará Empleo digno y productivo?')">💼 Empleo</button>
+      <button class="chip" onclick="askQuick('¿Cuál es su propuesta de Vivienda?')">🏠 Vivienda</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para la Cultura y el Deporte?')">🎨 Cultura</button>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-area">
+      <div class="bouncing-arrow" id="typingArrow">👇 Escribe tu pregunta aquí</div>
+      <input type="text" id="userInput"
+        placeholder="Pregunta sobre el programa de Fajardo..."
+        onkeypress="handleEnter(event)"
+        onfocus="hideArrow()">
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    /* ===== SUPABASE ===== */
+    const SUPABASE_URL = 'https://rbipvhgyhrhmfzhcmoms.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJiaXB2aGd5aHJobWZ6aGNtb21zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYxMTA2MjQsImV4cCI6MjA4MTY4NjYyNH0.bUykMfOOmDJckkHydUiYlLjJ93clzvfU0KCh27ivHlw';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function registrarVisita() {
+      try {
+        await _supabase.from('page_visits_fajardo').insert([{
+          user_agent: navigator.userAgent,
+          platform: navigator.platform
+        }]);
+      } catch (err) { console.error('Supabase error:', err); }
+    }
+    document.addEventListener('DOMContentLoaded', registrarVisita);
+
+    /* ===== CONFIG ===== */
+    const BACKEND_URL = "https://propuestas-rc75.onrender.com/api/chat";
+    let chatHistory = [];
+    let isSending = false;
+
+    function hideArrow() {
+      document.getElementById("typingArrow")?.classList.add("hide-arrow");
+    }
+
+    function askQuick(text) {
+      document.getElementById("userInput").value = text;
+      sendMessage();
+    }
+
+    async function sendMessage() {
+      if (isSending) return;
+      const input = document.getElementById("userInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      isSending = true;
+      input.value = "";
+      hideArrow();
+
+      const box = document.getElementById("chatBox");
+
+      /* Skeleton placeholder */
+      const skeleton = document.createElement('div');
+      skeleton.className = 'exchange-group skeleton-group';
+      skeleton.innerHTML = `
+        <div class="sk sk-question"></div>
+        <div class="sk sk-card" style="height:100px"></div>
+        <div class="sk sk-card" style="height:130px"></div>
+        <div class="sk sk-card" style="height:115px"></div>
+      `;
+      box.appendChild(skeleton);
+      skeleton.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      try {
+        const res = await fetch(BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: `Basado en el programa de gobierno de Fajardo: ${text}`,
+            history: chatHistory
+          })
+        });
+        const data = await res.json();
+        const reply = data.reply || "No pude obtener una respuesta.";
+
+        box.removeChild(skeleton);
+        const group = buildExchangeGroup(text, reply);
+        box.appendChild(group);
+
+        /* Scroll to show question card at top */
+        setTimeout(() => group.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+        chatHistory.push({ role: "user",  parts: [{ text }] });
+        chatHistory.push({ role: "model", parts: [{ text: reply }] });
+
+      } catch (err) {
+        box.removeChild(skeleton);
+        const group = buildExchangeGroup(text, "❌ Error al conectar con el servidor. Por favor intenta de nuevo.");
+        box.appendChild(group);
+      } finally {
+        isSending = false;
+      }
+    }
+
+    /* ===== BUILD EXCHANGE GROUP ===== */
+    function buildExchangeGroup(question, reply) {
+      const group = document.createElement('div');
+      group.className = 'exchange-group';
+
+      /* Question card */
+      const qCard = document.createElement('div');
+      qCard.className = 'question-card';
+      qCard.innerHTML = `
+        <span class="question-badge">Tu pregunta</span>
+        <span class="question-text">${escHtml(question)}</span>
+      `;
+      group.appendChild(qCard);
+
+      /* Response cards */
+      const responseWrap = document.createElement('div');
+      responseWrap.className = 'response-cards';
+      buildResponseCards(reply).forEach(card => responseWrap.appendChild(card));
+      group.appendChild(responseWrap);
+
+      return group;
+    }
+
+    /* ===== PARSE RESPONSE INTO CARDS ===== */
+    function buildResponseCards(text) {
+    console.log(text)
+      const emojis = { red: '🔴', target: '🎯', check: '✅' };
+      const hasStructure = text.includes(emojis.red) || text.includes(emojis.target) || text.includes(emojis.check);
+
+      if (!hasStructure) {
+        return [makeCard('generic', '💬', 'Respuesta', text)];
+      }
+
+      /* Locate sections */
+      const markers = [
+        { key: 'problem', emoji: '🔴', label: 'Así Estamos Hoy',        tag: 'Diagnóstico' },
+        { key: 'goal',    emoji: '🎯', label: 'A Dónde Llegaremos',      tag: 'La Meta'     },
+        { key: 'plan',    emoji: '✅', label: 'El Plan Paso a Paso',     tag: 'Acción'      },
+      ];
+
+      const positions = markers
+        .map(m => ({ ...m, idx: text.indexOf(m.emoji) }))
+        .filter(m => m.idx >= 0)
+        .sort((a, b) => a.idx - b.idx);
+
+      const cards = [];
+
+      /* Intro text before first section */
+      if (positions.length > 0 && positions[0].idx > 10) {
+        const intro = text.slice(0, positions[0].idx).trim();
+        if (intro) cards.push(makeCard('generic', '💬', 'Respuesta', intro));
+      }
+
+      positions.forEach((pos, i) => {
+        const end = positions[i + 1] ? positions[i + 1].idx : text.length;
+        const raw = text.slice(pos.idx, end).trim();
+
+        /* Strip the header line */
+        const firstNL = raw.indexOf('\n');
+        const body = firstNL > -1 ? raw.slice(firstNL + 1).trim() : raw;
+
+        cards.push(makeCard(pos.key, pos.emoji, pos.label, body, pos.tag));
+      });
+
+      return cards;
+    }
+
+    /* ===== BUILD SINGLE CARD ===== */
+    function makeCard(type, emoji, title, content, tag) {
+      const card = document.createElement('div');
+      card.className = `resp-card card-${type}`;
+
+      /* Header */
+      const hdr = document.createElement('div');
+      hdr.className = 'card-header';
+      hdr.innerHTML = `
+        <span class="card-header-emoji">${emoji}</span>
+        <span class="card-header-title">${title}</span>
+        ${tag ? `<span class="card-tag">${tag}</span>` : ''}
+      `;
+
+      /* Body */
+      const body = document.createElement('div');
+      body.className = 'card-body';
+      body.innerHTML = renderMarkdown(content, type);
+
+      card.appendChild(hdr);
+      card.appendChild(body);
+      return card;
+    }
+
+    /* ===== MARKDOWN → HTML ===== */
+    function renderMarkdown(text, cardType) {
+      /* 1. Primero convertimos las negritas de la IA a etiquetas <b> */
+      let html = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+      /* 2. NUEVA LÓGICA DE RESALTE: 
+         Buscamos lo que la IA puso en negritas y lo envolvemos en el diseño de 'stat-pill'.
+         Esto hará que "100 días" o "1.000 MW" brillen visualmente. */
+      html = html.replace(/<b>(.*?)<\/b>/g, '<span class="stat-pill">$1</span>');
+
+      /* 3. Detectar enlaces (clickeables) */
+      //html = html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 700;">$1</a>');
+        html = html.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
+            // url es el enlace completo capturado
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 700;">Uneté: ${url.toLowerCase()}</a>`;
+        });
+      /* 4. Listas de viñetas (* o -) */
+      const lines = html.split('\n');
+      const processed = [];
+      let inList = false;
+      for (let line of lines) {
+        const isBullet = /^[*\-•]\s+(.+)/.exec(line.trim());
+        if (isBullet) {
+          if (!inList) { processed.push('<ul>'); inList = true; }
+          processed.push(`<li>${isBullet[1]}</li>`);
+        } else {
+          if (inList) { processed.push('</ul>'); inList = false; }
+          processed.push(line);
         }
+      }
+      if (inList) processed.push('</ul>');
+      html = processed.join('\n');
 
-        // Ejecutar el registro en cuanto cargue la página
-        document.addEventListener('DOMContentLoaded', registrarVisita);
-        // Función para ocultar la flecha cuando el usuario hace clic en el input
-        function hideArrow() {
-            const arrow = document.getElementById("typingArrow");
-            if (arrow) {
-                arrow.classList.add("hide-arrow");
-            }
+      /* 5. Frase de impacto al final del plan */
+      if (cardType === 'plan') {
+        const parts = html.trimEnd().split('\n');
+        let lastNonEmpty = parts.length - 1;
+        while (lastNonEmpty > 0 && !parts[lastNonEmpty].trim()) lastNonEmpty--;
+        const lastLine = parts[lastNonEmpty].trim();
+        if (lastLine && !lastLine.startsWith('<') && lastLine.length > 20) {
+          parts[lastNonEmpty] = `<div class="impact-line">${lastLine}</div>`;
+          html = parts.join('\n');
         }
-        const BACKEND_URL = "https://propuestas-rc75.onrender.com/api/chat";
-        let chatHistory = [];
+      }
 
-        function askQuick(text) {
-            document.getElementById("userInput").value = text;
-            sendMessage();
-        }
+      /* 6. Saltos de línea */
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+    
+    /* ===== UTILS ===== */
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
 
-        async function sendMessage() {
-            const input = document.getElementById("userInput");
-            const text = input.value.trim();
-            if (!text) return;
-
-            // 1. Guardamos el elemento HTML de la pregunta del usuario
-            const userMsgElement = addMessage(text, 'user');
-            
-            // Hacemos scroll suave hacia abajo para que el usuario vea su pregunta enviada
-            userMsgElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
-            
-            input.value = "";
-            const loading = document.getElementById("loadingMsg");
-            loading.classList.add("loading-visible");
-
-            // Ocultar la flecha si sigue activa (código de la mejora anterior)
-            hideArrow(); 
-
-            try {
-                const response = await fetch(BACKEND_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: `Basado en el programa de gobierno de Fajardo: ${text}`,
-                        history: chatHistory
-                    })
-                });
-
-                const data = await response.json();
-                
-                // 2. Agregamos la respuesta del bot
-                addMessage(data.reply || "No pude obtener una respuesta.", 'bot');
-                
-                // 3. MAGIA DEL SCROLL: Hacemos que la pantalla se alinee con la pregunta del usuario (arriba)
-                setTimeout(() => {
-                    userMsgElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-                
-                chatHistory.push({ role: "user", parts: [{ text }] });
-                chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
-
-            } catch (error) {
-                addMessage("Error al conectar con el servidor de análisis.", 'bot');
-            } finally {
-                loading.classList.remove("loading-visible");
-            }
-        }
-
-        function addMessage(text, sender) {
-            const box = document.getElementById("chatBox");
-            const div = document.createElement("div");
-            div.className = `message ${sender}-msg`;
-            
-            if (sender === 'bot') {
-                // --- LÓGICA DE FORMATEO INTELIGENTE PARA EL BOT ---
-                
-                // 1. Reemplazamos negritas de Gemini (**texto**) por <b>
-                let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-
-                // 2. MAGIA DE LISTAS: Detectar y envolver bloques de viñetas (* o -)
-                // Buscamos líneas que empiecen por asterisco y tengan texto después.
-                // (?!ul|li) evita problemas si ya hay HTML.
-                formattedText = formattedText.replace(/(\r?\n|^)[*-]\s(.*?)(\r?\n|$)/g, function(match, startNewline, itemText, endNewline) {
-                    // Quitamos saltos de línea extraños y envolvemos en <li>
-                    return `${startNewline}<li>${itemText.trim()}</li>${endNewline}`;
-                });
-
-                // 3. Envolvemos todos los grupos de <li> adyacentes dentro de un <ul>
-                formattedText = formattedText.replace(/(<li>.*?<\/li>)+/gs, '<ul>$&</ul>');
-
-                // 4. Reemplazamos los saltos de línea restantes por <br> (para texto normal)
-                formattedText = formattedText.replace(/\r?\n/g, '<br>');
-
-                div.innerHTML = formattedText;
-                
-            } else {
-                // Para el usuario, formato simple
-                div.innerHTML = text.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            }
-
-            box.appendChild(div);
-            return div; // Devolvemos el elemento (necesario para el scroll inteligente que ya tienes)
-        }
-
-        function handleEnter(e) {
-            if (e.key === "Enter") sendMessage();
-        }
-    </script>
+    function handleEnter(e) {
+      if (e.key === 'Enter') sendMessage();
+    }
+  </script>
 </body>
 </html>
