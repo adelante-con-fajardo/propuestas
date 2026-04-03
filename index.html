@@ -505,18 +505,20 @@
     }
 
     .stat-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      background: #FFF3CD; /* Fondo amarillito */
-      color: #8B3A00;    /* Texto marrón/oscuro */
+      display: inline; /* Permite que el texto fluya como parte del párrafo */
+      background: #FFF3CD; 
+      color: #8B3A00; 
       font-weight: 700;
       font-family: 'Oswald', sans-serif;
-      padding: 2px 8px;
+      padding: 2px 6px;
       border-radius: 6px;
       border: 1px solid rgba(193,39,45,0.15);
       margin: 0 2px;
-      white-space: nowrap; /* Evita que el número se separe de la palabra */
+      
+      /* LAS CLAVES PARA QUE NO ROMPA EL DISEÑO: */
+      white-space: normal; /* Permite que el texto largo salte de línea */
+      -webkit-box-decoration-break: clone; /* Si salta de línea, clona los bordes y el fondo en ambas partes */
+      box-decoration-break: clone;
     }
   </style>
 </head>
@@ -527,8 +529,8 @@
     <div class="header">
       <div class="header-logo">FAJARDO</div>
       <div class="header-info">
-        <div class="header-slogan">Cambio · Serio · Seguro</div>
-        <div class="header-title">Asistente de Programa de Gobierno 2026</div>
+        <div class="header-slogan">Cambio. Serio. Seguro.</div>
+       <!-- <div class="header-title">Asistente de Programa de Gobierno 2026</div>-->
       </div>
       <div class="header-status">
         <div class="dot-online"></div>En línea
@@ -538,36 +540,118 @@
     <!-- CHAT BOX -->
     <div class="chat-box" id="chatBox">
       <div class="greeting-card">
-        <div class="greeting-icon">👨‍🏫</div>
-        <div class="greeting-text">
-  Colombia está a un paso del punto de no retorno. ⚠️ Mientras otros prometen, <strong>Sergio Fajardo</strong> ya tiene la hoja de ruta para rescatar nuestro futuro. No permitas que te sigan engañando. <strong>¿Quieres saber qué es lo que realmente va a pasar con tu país? Pregúntame ahora.</strong>
+  <div class="greeting-avatar">
+    <span class="emoji">👨‍🏫</span>
+    <div class="online-indicator"></div>
+  </div>
+
+  <div class="greeting-content">
+    <span class="greeting-tag">Propuesta de Gobierno 2026</span>
+    <p class="greeting-text">
+      Colombia no necesita más gritos, necesita respuestas. 🛑 Otros te dan discursos, 
+      <strong>Sergio Fajardo</strong> te entrega una hoja de ruta real para 
+      <strong>recuperar tu tranquilidad</strong>. La verdad está a un clic. 
+      <br><br>
+      <strong>¿Quieres saber qué pasará con tu bolsillo y tu seguridad? Pregúntame ahora.</strong>
+    </p>
+  </div>
 </div>
-      </div>
     </div>
     <style>
-        .greeting-text {
-    font-size: 1.05rem; /* Un poco más grande que el resto */
-    font-weight: 500;
+.greeting-card {
+  display: flex;
+  gap: 16px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 20px;
+  border-left: 6px solid var(--yellow); /* Acento de color para captar atención */
+  box-shadow: 0 10px 25px rgba(0, 58, 140, 0.05);
+  margin-bottom: 20px;
+  animation: fadeInUp 0.6s ease-out;
+  align-items: flex-start;
+}
+
+.greeting-avatar {
+  position: relative;
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  background: var(--bg);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+}
+
+/* Indicador de "En vivo" para generar cercanía */
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #4ADE80;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+.greeting-content {
+  flex: 1;
+}
+
+.greeting-tag {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--red);
+  background: var(--red-soft);
+  padding: 4px 10px;
+  border-radius: 50px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.greeting-text {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text);
+  margin: 0;
+}
+
+.greeting-text strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
     </style>
 
     <!-- CHIPS -->
     <div class="suggestions">
-      <button class="chip" onclick="askQuick('¿Cuál es el Plan Guardián de Seguridad?')">🛡️ Seguridad</button>
-      <button class="chip" onclick="askQuick('¿Qué propone para el sistema de Salud?')">🏥 Salud</button>
-      <button class="chip" onclick="askQuick('¿Cómo manejará las Finanzas Públicas y la Regla Fiscal?')">📈 Economía</button>
-      <button class="chip" onclick="askQuick('¿Cuál es la propuesta de Transición Energética?')">⚡ Energía</button>
-      <button class="chip" onclick="askQuick('¿Cómo combatirá la Corrupción?')">⚖️ Anticorrupción</button>
-      <button class="chip" onclick="askQuick('¿Qué reformas propone para la Justicia?')">🏛️ Justicia</button>
+      <button class="chip primary" onclick="askQuick('¿Cómo protegerá a mi familia y mi barrio?')">🛡️ Mi Seguridad</button>
+      <button class="chip primary" onclick="askQuick('¿Cómo creará empleo digno y productivo?')">💼 Mi Empleo</button>
+      <button class="chip primary" onclick="askQuick('¿Qué propone para que mi salud sea mejor?')">🏥 Mi Salud</button>
+      <button class="chip primary" onclick="askQuick('¿Cómo combatirá la corrupción y el robo de impuestos?')">⚖️ Cero Corrupción</button>
+      <button class="chip primary" onclick="askQuick('¿Cómo manejará la economía para que el dinero alcance?')">📈 Mi Bolsillo</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para el bienestar del Adulto Mayor?')">👴 Adultos Mayores</button>
+      <button class="chip" onclick="askQuick('¿Cuál es el plan para la niñez y la familia?')">👨‍👩‍👧‍👦 Familia</button>
       <button class="chip" onclick="askQuick('¿Qué propone para la Educación?')">📚 Educación</button>
-      <button class="chip" onclick="askQuick('¿Cuál es el plan para el Emprendimiento?')">🚀 Emprendimiento</button>
-      <button class="chip" onclick="askQuick('¿Cómo impulsará la Agricultura y el desarrollo rural?')">🚜 Campo</button>
-      <button class="chip" onclick="askQuick('¿Qué dice sobre Medio Ambiente y Bioeconomía?')">🌿 Ambiente</button>
-      <button class="chip" onclick="askQuick('¿Cuál es el plan de Infraestructura y Transporte?')">🛣️ Infraestructura</button>
-      <button class="chip" onclick="askQuick('¿Qué propone para el Turismo?')">🏝️ Turismo</button>
-      <button class="chip" onclick="askQuick('¿Qué propone para la Inclusión Social?')">🤝 Inclusión</button>
-      <button class="chip" onclick="askQuick('¿Cómo creará Empleo digno y productivo?')">💼 Empleo</button>
       <button class="chip" onclick="askQuick('¿Cuál es su propuesta de Vivienda?')">🏠 Vivienda</button>
+      <button class="chip" onclick="askQuick('¿Cuál es el plan para el Emprendimiento?')">🚀 Emprendimiento</button>
+      <button class="chip" onclick="askQuick('¿Cómo impulsará el Campo y desarrollo rural?')">🚜 Campo</button>
+      <button class="chip" onclick="askQuick('¿Cómo impulsará la Justicia?')">🏛️ Justicia</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para la Inclusión Social?')">🤝 Inclusión</button>
+      <button class="chip" onclick="askQuick('¿Cuál es la propuesta de Transición Energética?')">⚡ Energía</button>
+      <button class="chip" onclick="askQuick('¿Qué dice sobre Medio Ambiente?')">🌿 Ambiente</button>
+      <button class="chip" onclick="askQuick('¿Cuál es el plan de Infraestructura?')">🛣️ Vías y Transporte</button>
+      <button class="chip" onclick="askQuick('¿Qué propone para el Turismo?')">🏝️ Turismo</button>
       <button class="chip" onclick="askQuick('¿Qué propone para la Cultura y el Deporte?')">🎨 Cultura</button>
     </div>
 
@@ -773,7 +857,7 @@
       //html = html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 700;">$1</a>');
         html = html.replace(/(https?:\/\/[^\s<]+)/g, function(url) {
             // url es el enlace completo capturado
-            return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 700;">Uneté: ${url.toLowerCase()}</a>`;
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: inherit; text-decoration: underline; font-weight: 700;">${url.toLowerCase()}</a>`;
         });
       /* 4. Listas de viñetas (* o -) */
       const lines = html.split('\n');
