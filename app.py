@@ -13,7 +13,7 @@ API_KEY = os.environ.get("API_KEY")
 URI_PROGRAMA_GOBIERNO = "https://generativelanguage.googleapis.com/v1beta/files/unzqe9lyp9ii"
 
 # 2. Este caché DEBE haber sido creado usando el modelo gemini-2.5-flash-lite
-CACHED_CONTENT_NAME = "cachedContents/v51em3cjd79l3h6jxlnerj7z3ldsqvs27wmchr74"
+CACHED_CONTENT_NAME = "cachedContents/z4tqqqdqlqkni5k8nkoqiq2jzn96nlontk1cgnhc"
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
